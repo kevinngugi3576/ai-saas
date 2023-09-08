@@ -38,7 +38,7 @@ function Videos() {
 
     }
   return (
-    <div style={{marginTop:30,display:'table',margin:'auto'}}>
+    <div style={{marginTop:40,display:'table',margin:'auto'}}>
      <TextField 
      type="text"
         label="A horse in the Alps"
@@ -48,8 +48,14 @@ function Videos() {
      <center>
      <Button onClick={updateFunction}  variant="contained" fontSize="large" style={{marginTop:10,marginLeft:5,
         cursor:'pointer',fontWeight:'bold', background: 'linear-gradient(310deg, #000045, #00008A)'}}>
-        Generate {currentUser?.limits}
+        Generate
      </Button>
+     </center>
+     <center>
+
+     {currentUser?.limits <= 1 &&(
+        <i style={{fontSize:13,cursor:'pointer', marginTop:15,marginLeft:5}}>You have {currentUser?.limits} limit(s), kindly click here to subscribe</i>
+     )}
      </center>
 
     </div>
