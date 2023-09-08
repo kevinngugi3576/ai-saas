@@ -105,6 +105,7 @@ export default function SignUp() {
                               firstName,
                               lastName,
                               email,
+                              limits: 5,
                               profilePhoto: "https://firebasestorage.googleapis.com/v0/b/uon-foe.appspot.com/o/profile-photos%2Fmale.png?alt=media&token=87975cfa-98e0-4350-bbe5-ec68d547b59d",
                               timestamp: Date.now(),
                               isSubscribed:false,
