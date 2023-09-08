@@ -1,5 +1,5 @@
 body {
-  background-image:     linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://www.kenyanews.go.ke/wp-content/uploads/2020/09/JKUAT-1200x630.jpg');
+  background-image:     linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://imageio.forbes.com/specials-images/imageserve/648aaa9fac6d92c810b12f50/Why-Companies-Are-Vastly-Underprepared-For-The-Risks-Posed-By-AI/960x0.jpg?height=406&width=711&fit=bounds');
   background-size: cover;
   background-repelat: no-repeat; /* Prevents repeating of the image */
 }
