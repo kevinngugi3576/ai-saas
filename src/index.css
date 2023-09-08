@@ -1,0 +1,8 @@
+body {
+  background-image:     linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://www.kenyanews.go.ke/wp-content/uploads/2020/09/JKUAT-1200x630.jpg');
+  background-size: cover;
+  background-repelat: no-repeat; /* Prevents repeating of the image */
+}
+.my-swal-container{
+  z-index: 9999
+}
