@@ -49,14 +49,13 @@ function Home() {
   >
   <center><img src="logo.png" className="App-logo" alt="logo" /></center>
 <div >
-  <i style={{fontSize:25, fontWeight:'bold'}}>Sentym</i>
+  <i style={{fontSize:25, fontWeight:'bold'}}>ABOUT</i>
 </div>
     <p style={{fontSize:16}}>
-   System for Sentiment Analysis of Social Media Data using Machine Learning Naive Bayes Algorithm to train the data from Twitter and Facebook to predict the sentiment of the data.
+      The video
     </p>
     <p>
     <br />
-    <i>Making it easy to analyse and predict the next plan...</i>
     </p>
   </motion.center>
 
@@ -72,13 +71,13 @@ function Home() {
     marginLeft:10,
     fontWeight:'bold'
   }} variant="contained" onClick={() =>handleClickOpen('Videos')}>
-  AI Videos Generator <span style={{marginLeft:10}}><FacebookIcon/></span>
+  AI Videos Generator 
 </Button>
 <Button style={{
   marginLeft:10,
   fontWeight:'bold'
 }} variant="contained" onClick={() =>handleClickOpen('Audios')}>
-AI Audios Generator <span style={{marginLeft:10}}><TwitterIcon/></span>
+AI Audios Generator
 </Button>
 </center>
   </motion.div>

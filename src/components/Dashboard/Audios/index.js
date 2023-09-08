@@ -3,8 +3,10 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { auth, db } from '../../../FireBase'
 import Swal from 'sweetalert2'
+import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 
-function Audios() {
+
+function Audio() {
     const authId = useSelector(state => state.authId)
     const [currentUser, setCurrentUser] = React.useState(null)
 
@@ -37,13 +39,67 @@ function Audios() {
         }
 
     }
+
+    const config = {
+        public_key: 'FLWPUBK-f8d0aacbffe32208f371c19595882b2d-X',
+        tx_ref: Date.now(),
+        amount: 1,
+        currency: 'KES',
+        payment_options: 'mobilemoney',
+        customer: {
+          email: "kevinngugi197@gmail.com",
+          phoneNumber: "0798722388"
+          },
+
+        // mobilemoney
+        customizations: {
+          title: 'Ai SAAS',
+          description: 'Subscription to Ai SAAS',
+          logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
+        },
+      };
+      
+      
+      const havePaid = () => {
+      
+       db.collection('users').doc(auth.currentUser.uid).update({
+          isSubscribed:true,
+          limits:5
+       })
+      
+      
+      }
+      
+      const handleFlutterPayment = useFlutterwave(config);
+      
+      const afterPay = () =>{
+      
+        handleFlutterPayment({
+          callback: (response) => {
+            //  console.log(response);
+             if(response.status == "successful"){
+              havePaid()
+             }else{
+               Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+               })
+             }
+              closePaymentModal() // this will close the modal programmatically
+          },
+          onClose: () => {},
+        });
+      }
+
   return (
-    <div style={{marginTop:50,display:'table',margin:'auto'}}>
+    <div style={{display:'table',margin:'auto'}}>
      <TextField 
      type="text"
-        label="A solo piano piece"
+        label="A horse in the Alps"
         variant="outlined"
-        style={{width:500}}
+        style={{width:500, marginTop:20}}
+
      />
      <center>
      <Button onClick={updateFunction}  variant="contained" fontSize="large" style={{marginTop:10,marginLeft:5,
@@ -54,7 +110,7 @@ function Audios() {
      <center>
 
      {currentUser?.limits <= 1 &&(
-        <i style={{fontSize:13,cursor:'pointer', marginTop:15,marginLeft:5}}>You have {currentUser?.limits} limit(s), kindly click here to subscribe</i>
+        <i onClick={afterPay} style={{fontSize:13,cursor:'pointer', marginTop:15,marginLeft:5}}>You have {currentUser?.limits} limit(s), kindly click here to subscribe</i>
      )}
      </center>
 
@@ -62,4 +118,4 @@ function Audios() {
   )
 }
 
-export default Audios
+export default Audio;
