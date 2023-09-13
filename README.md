@@ -1,5 +1,10 @@
 # Getting Started with Create React App
 
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -68,3 +73,26 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+AI -SAAS
+
+This project Allows user to be able to generate any reandom videos and audio files at will.
+
+Technologies Used
+React.js
+Firebase
+Material UI
+React Bootstrap
+Persisted React Redux
+
+Features
+User authentication and data storage using Firebase
+Responsive and user-friendly UI with Material UI and  React Bootstrap
+
+
+
+
+
+
+
