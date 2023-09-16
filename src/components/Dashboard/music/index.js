@@ -1,16 +1,21 @@
+import React, { useState, useEffect } from "react";
 import { Button, TextField } from "@mui/material";
-import React from "react";
 import { useSelector } from "react-redux";
 import { auth, db } from "../../../FireBase";
 import Swal from "sweetalert2";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
-import Replicate from "replicate";
+import { Empty } from "../../Empty";
+import { Loader } from "../../Loader";
+import  GenerateMusic  from "../../Music";
 
-function Videos() {
+function Music() {
   const authId = useSelector((state) => state.authId);
-  const [currentUser, setCurrentUser] = React.useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [music, setMusic] = useState(null); // State to store audio URL
+  const [isLoading, setIsLoading] = useState(false);
+  const [textFieldValue, setTextFieldValue] = useState("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsub = auth?.onAuthStateChanged((user) => {
       db?.collection("users")
         ?.doc(`${user?.uid}`)
@@ -19,39 +24,71 @@ function Videos() {
         });
     });
 
-    // Clean up the listener when the component unmounts
     return () => unsub();
   }, []);
 
-  const updateFunction = () => {
+  const handleTextFieldChange = (event) => {
+    setTextFieldValue(event.target.value);
+  };
+
+  const handleGenerateMusic = async () => {
+    try {
+      setIsLoading(true);
+      // Call the API to fetch music
+      const musicData = await GenerateMusic(textFieldValue);
+      setMusic(musicData);
+    } catch (error) {
+      console.error("Error generating music:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  const updateFunction = async () => {
+    setIsLoading(true);
+  
     if (currentUser?.limits === 0) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "You have no limits left!",
         customClass: {
-          container: "my-swal-container", // Replace 'my-swal-container' with your desired class name
+          container: "my-swal-container",
         },
       });
+      setIsLoading(false);
     } else {
       const limits1 = currentUser?.limits - 1;
-      db.collection("users").doc(authId).update({
-        limits: limits1,
-      });
+      try {
+        await db.collection("users").doc(authId).update({
+          limits: limits1,
+        });
+  
+        // Wait for the API to generate audio
+        const music = await handleGenerateMusic(textFieldValue);
+  
+        // Set isLoading to false only after the API has generated audio
+        setIsLoading(false);
+  
+        // Render the audio player
+        setMusic(music);
+      } catch (error) {
+        console.error("Error updating limits: ", error);
+        setIsLoading(false);
+      }
     }
   };
-
   const config = {
-    public_key: "FLWPUBK-f8d0aacbffe32208f371c19595882b2d-X",
+    public_key: "",
     tx_ref: Date.now(),
     amount: 1,
     currency: "KES",
     payment_options: "mobilemoney",
     customer: {
       email: "kevinngugi197@gmail.com",
-      phonenumber: "0798722388",
+      phoneNumber: "0798722388",
     },
-    // mobilemoney
     customizations: {
       title: "Ai SAAS",
       description: "Subscription to Ai SAAS",
@@ -80,45 +117,26 @@ function Videos() {
             text: "Something went wrong!",
           });
         }
-        closePaymentModal(); // this will close the modal programmatically
+        closePaymentModal();
       },
       onClose: () => {},
     });
   };
 
-  const myTest = async () => {
-    const replicate = new Replicate({
-      auth: "r8_dZMIiQyK4QuNjmt4U2ogSwFNF8Fpg0n33seMp", // Replace with your actual API token
-    });
+  
 
-    try {
-      const model =
-        "andreasjansson/blip-2:4b32258c42e9efd4288bb9910bc532a69727f9acd26aa08e175713a0a857a608";
-      const input = {
-        image:
-          "https://replicate.delivery/pbxt/IJEPmgAlL2zNBNDoRRKFegTEcxnlRhoQxlNjPHSZEy0pSIKn/gg_bridge.jpeg",
-        question: "what body of water does this bridge cross?",
-      };
-      const response = await replicate.run(
-        "anotherjesse/zeroscope-v2-xl:9f747673945c62801b13b84701c783929c0ee784e4748ec062204894dda1a351",
-        {
-          input: {
-            prompt: "A horse in the Alps",
-          },
-        }
-      );
-
-      console.log("Output: ", response);
-    } catch (error) {}
-  };
+  
 
   return (
     <div style={{ display: "table", margin: "auto" }}>
       <TextField
         type="text"
-        label="A horse in the Alps"
+        label="A funky synth solo"
         variant="outlined"
-        style={{ width: 500, marginTop: 20 }}
+        style={{ width: 800, marginTop: 40, marginLeft: 250, marginRight: 250 }}
+        disabled={isLoading}
+        value={textFieldValue}
+        onChange={handleTextFieldChange}
       />
       <center>
         <Button
@@ -127,13 +145,14 @@ function Videos() {
           fontSize="large"
           style={{
             marginTop: 10,
-            marginLeft: 5,
+            marginLeft: 20,
             cursor: "pointer",
             fontWeight: "bold",
+            width: 720,
             background: "linear-gradient(310deg, #000045, #00008A)",
           }}
         >
-          Generate
+          Generate Music
         </Button>
       </center>
       <center>
@@ -153,9 +172,22 @@ function Videos() {
         )}
       </center>
 
-      <Button onClick={myTest}>Test Replicate</Button>
+      <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+        {isLoading && (
+          <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+            <Loader />
+          </div>
+        )}
+        {!textFieldValue && <Empty label="No music generated yet" />}
+
+        {music && (
+          <audio controls className="w-full mt-8">
+            <source src={music} />
+          </audio>
+        )}
+      </div>
     </div>
   );
 }
 
-export default Videos;
+export default Music;
